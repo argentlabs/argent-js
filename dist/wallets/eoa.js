@@ -12,8 +12,8 @@ class EOA {
         }
         this.address = address.toLowerCase();
     }
-    isWallet(signature) {
-        return Promise.resolve(signature === '0xc5d24601');
+    isWallet(codeSignature) {
+        return Promise.resolve(codeSignature === '0xc5d24601');
     }
     isValidSignature(message, signature) {
         const msgSigner = ethers_1.ethers.utils.verifyMessage(message, signature);

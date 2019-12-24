@@ -27,10 +27,10 @@ class Argent {
         }
         this.address = address;
     }
-    isWallet(signature) {
+    isWallet(codeSignature) {
         return __awaiter(this, void 0, void 0, function* () {
             let success = false;
-            if (signature === '0x83baa4b2') {
+            if (codeSignature === '0x83baa4b2') {
                 const impl = yield this.contract.provider.getStorageAt(this.address, 0);
                 success = ['0xb1dd690cc9af7bb1a906a9b5a94f94191cc553ce'].includes(ethers_1.utils.hexDataSlice(impl, 12));
             }

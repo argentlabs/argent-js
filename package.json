@@ -4,7 +4,7 @@
   "description": "utilities for smart-contract wallets",
   "main": "y",
   "scripts": {
-    "start": "tsc && node example/index.js",
+    "start": "tsc && node test/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Gerald Goldstein, Julien Niset",
@@ -14,7 +14,9 @@
     "typescript": "^3.7.3"
   },
   "dependencies": {
+    "@walletconnect/web3-provider": "^1.0.0-beta.42",
     "ethers": "^4.0.40",
-    "web3": "^1.2.4"
+    "web3": "^1.2.4",
+    "web3connect": "^1.0.0-beta.25"
   }
 }

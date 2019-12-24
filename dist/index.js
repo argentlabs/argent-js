@@ -29,10 +29,10 @@ class SmartWalletUtils {
         return __awaiter(this, void 0, void 0, function* () {
             let wallet;
             const code = yield this.provider.getCode(this.address);
-            const signature = ethers_1.ethers.utils.keccak256(code).slice(0, 10);
+            const codeSignature = ethers_1.ethers.utils.keccak256(code).slice(0, 10);
             for (let index in this.wallets) {
                 wallet = this.wallets[index];
-                const isWallet = yield wallet.isWallet(signature);
+                const isWallet = yield wallet.isWallet(codeSignature);
                 if (isWallet)
                     break;
             }
