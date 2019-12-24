@@ -1,0 +1,54 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const interfaces_1 = require("../interfaces");
+const ethers_1 = require("ethers");
+const contract_1 = require("ethers/contract");
+const argentABI = [
+    'function isValidSignature(bytes _message, bytes _signature) public returns (bool)',
+    'function approveTokenAndCallContract(address _wallet, address _token, address _contract, uint256 _amount, bytes _data) external'
+];
+class Argent {
+    constructor(address, provider) {
+        this.type = interfaces_1.WalletType.Argent;
+        this.contract = new contract_1.Contract(address, argentABI, provider);
+        this.supportEIP1271 = true;
+        this.supportApproveAndCall = true;
+        if (!ethers_1.utils.getAddress(address)) {
+            throw new Error('Invalid signer address');
+        }
+        this.address = address;
+    }
+    isWallet(signature) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let success = false;
+            if (signature === '0x83baa4b2') {
+                const impl = yield this.contract.provider.getStorageAt(this.address, 0);
+                success = ['0xb1dd690cc9af7bb1a906a9b5a94f94191cc553ce'].includes(ethers_1.utils.hexDataSlice(impl, 12));
+            }
+            return Promise.resolve(success);
+        });
+    }
+    isValidSignature(message, signature) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const returnValue = yield this.contract.isValidSignature(message, signature);
+            return Promise.resolve(returnValue);
+        });
+    }
+    approveAndCall(token, amount, contract, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const tx = yield this.contract.approveTokenAndCallContract(this.address, token, contract, amount, data);
+            return Promise.resolve(tx.hash);
+        });
+    }
+}
+exports.Argent = Argent;
+//# sourceMappingURL=argent.js.map

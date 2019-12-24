@@ -1,0 +1,20 @@
+{
+  "name": "y",
+  "version": "0.0.1",
+  "description": "utilities for smart-contract wallets",
+  "main": "y",
+  "scripts": {
+    "start": "tsc && node example/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gerald Goldstein, Julien Niset",
+  "license": "ISC",
+  "devDependencies": {
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.3"
+  },
+  "dependencies": {
+    "ethers": "^4.0.40",
+    "web3": "^1.2.4"
+  }
+}
