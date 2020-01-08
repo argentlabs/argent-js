@@ -5,23 +5,25 @@ import { ethers } from 'ethers';
 
 class ExampleApp extends React.Component {
     state = {
-        adress: null
+        response: []
     }
 
-    async componentDidMount() {
-        const {
-            provider
-        } = this.props;
+    // async componentDidMount() {
+    //     const {
+    //         provider
+    //     } = this.props;
 
-        const address = await provider.getSigner(0).getAddress();
-        this.setState({ address });
-    }
+    //     const address = await provider.getSigner(0).getAddress();
+    //     this.setState({ address });
+    // }
 
     onSign = async () => {
         const {
             provider,
             wallet
         } = this.props;
+
+        this.resetResponse();
 
         const message = 'cogito ergo sum';
         const arrayishMessage = ethers.utils.toUtf8Bytes(message);
@@ -32,19 +34,42 @@ class ExampleApp extends React.Component {
 
         const isValid = await wallet.isValidSignature(hexMessage, signature);
 
-        console.log(isValid);
+        const response = [
+            `message: ${message}`,
+            `hexMessage: ${hexMessage}`,
+            `signHash: ${ethers.utils.hashMessage(arrayishMessage)}`,
+            `signature: ${signature}`,
+            `isValid: ${ isValid ? 'true' : 'false' }`
+        ]
+
+        this.setState({ response });
+    }
+
+    onApproveAndCall = async () => {
+
+    }
+
+    resetResponse = () => {
+        this.setState({ response: [] });
     }
 
     render() {
         const {
-            address
+            response
         } = this.state;
 
         return (
             <div>
-                <div>{ address ? address : null}</div>
-                <Button onClick={this.onSign}>Sign</Button>
-                <Button onClick={this.props.disconnect}>Disconnect</Button>
+                <h2>Actions:</h2>
+                <div>
+                    <Button color="primary" onClick={this.onSign}>Sign Message</Button>{' '}
+                    <Button color="success" onClick={this.onApproveAndCall}>Approve And Call</Button>
+                </div>
+                <div>
+                    { response.map((item, idx) => (
+                        <div key={idx}>{item}</div>
+                    )) }
+                </div>
             </div>
         );
     }

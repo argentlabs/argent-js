@@ -49,8 +49,8 @@ class Connect extends React.Component {
     render() {
         return (
             <div>
-                <Button onClick={this.onConnectWithMetaMask}>Connect With MetaMask</Button>
-                <Button onClick={this.onConnectWithWalletConnect}>Connect With Wallet Connect</Button>
+                <Button color="warning" onClick={this.onConnectWithMetaMask}>Connect With MetaMask</Button>{' '}
+                <Button color="primary" onClick={this.onConnectWithWalletConnect}>Connect With Wallet Connect</Button>
             </div>
         );
     }
