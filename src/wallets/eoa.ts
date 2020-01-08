@@ -21,9 +21,10 @@ export class EOA implements Wallet {
     isWallet(codeSignature: string): Promise<boolean> {
         return Promise.resolve(codeSignature === '0xc5d24601')
     }
-    
+
     isValidSignature(message: string, signature: string): Promise<boolean> {
-        const msgSigner = ethers.utils.verifyMessage(message, signature)
+        const hexArray = ethers.utils.arrayify(message)
+        const msgSigner = ethers.utils.verifyMessage(hexArray, signature)
         return Promise.resolve(msgSigner.toLowerCase() === this.address)
     }
 

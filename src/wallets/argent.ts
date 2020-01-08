@@ -4,7 +4,7 @@ import { Provider } from 'ethers/providers'
 import { Contract } from 'ethers/contract'
 
 const argentABI = [
-    'function isValidSignature(bytes _message, bytes _signature) public returns (bool)',
+    'function isValidSignature(bytes32 _message, bytes _signature) public view returns (bool)',
     'function approveTokenAndCallContract(address _wallet, address _token, address _contract, uint256 _amount, bytes _data) external'
 ];
 
@@ -35,10 +35,16 @@ export class Argent implements Wallet {
         }
         return Promise.resolve(success)
     }
-    
+
     async isValidSignature(message: string, signature: string): Promise<boolean> {
-        const returnValue = await this.contract.isValidSignature(message, signature)
-        return Promise.resolve(returnValue)
+        const hexArray = utils.arrayify(message)
+        const hashMessage = utils.hashMessage(hexArray)
+        try {
+            const returnValue = await this.contract.isValidSignature(hashMessage, signature)
+            return Promise.resolve(returnValue)
+        } catch (err) {
+            return Promise.resolve(false)
+        }
     }
 
     async approveAndCall(token: string, amount: number, contract: string, data: string): Promise<string> {

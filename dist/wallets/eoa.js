@@ -16,7 +16,8 @@ class EOA {
         return Promise.resolve(codeSignature === '0xc5d24601');
     }
     isValidSignature(message, signature) {
-        const msgSigner = ethers_1.ethers.utils.verifyMessage(message, signature);
+        const hexArray = ethers_1.ethers.utils.arrayify(message);
+        const msgSigner = ethers_1.ethers.utils.verifyMessage(hexArray, signature);
         return Promise.resolve(msgSigner.toLowerCase() === this.address);
     }
     approveAndCall(token, amount, contract, data) {

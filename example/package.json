@@ -11,7 +11,8 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
-    "reactstrap": "^8.2.0"
+    "reactstrap": "^8.2.0",
+    "smartwallet-utils": "file:.."
   },
   "scripts": {
     "start": "react-scripts start",

@@ -13,7 +13,7 @@ const interfaces_1 = require("../interfaces");
 const ethers_1 = require("ethers");
 const contract_1 = require("ethers/contract");
 const argentABI = [
-    'function isValidSignature(bytes _message, bytes _signature) public returns (bool)',
+    'function isValidSignature(bytes32 _message, bytes _signature) public view returns (bool)',
     'function approveTokenAndCallContract(address _wallet, address _token, address _contract, uint256 _amount, bytes _data) external'
 ];
 class Argent {
@@ -39,8 +39,15 @@ class Argent {
     }
     isValidSignature(message, signature) {
         return __awaiter(this, void 0, void 0, function* () {
-            const returnValue = yield this.contract.isValidSignature(message, signature);
-            return Promise.resolve(returnValue);
+            const hexArray = ethers_1.utils.arrayify(message);
+            const hashMessage = ethers_1.utils.hashMessage(hexArray);
+            try {
+                const returnValue = yield this.contract.isValidSignature(hashMessage, signature);
+                return Promise.resolve(returnValue);
+            }
+            catch (err) {
+                return Promise.resolve(false);
+            }
         });
     }
     approveAndCall(token, amount, contract, data) {
