@@ -14,7 +14,7 @@ const ethers_1 = require("ethers");
 const contract_1 = require("ethers/contract");
 const argentABI = [
     'function isValidSignature(bytes32 _message, bytes _signature) public view returns (bool)',
-    'function approveTokenAndCallContract(address _wallet, address _token, address _contract, uint256 _amount, bytes _data) external'
+    'function argent_approveTokenAndCallContract(address _wallet, address _token, address _contract, uint256 _amount, bytes _data) external'
 ];
 class Argent {
     constructor(address, provider) {
@@ -26,6 +26,9 @@ class Argent {
             throw new Error('Invalid signer address');
         }
         this.address = address;
+    }
+    getName() {
+        return 'Argent';
     }
     isWallet(codeSignature) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -52,7 +55,7 @@ class Argent {
     }
     approveAndCall(token, amount, contract, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const tx = yield this.contract.approveTokenAndCallContract(this.address, token, contract, amount, data);
+            const tx = yield this.contract.argent_approveTokenAndCallContract(this.address, token, contract, amount, data);
             return Promise.resolve(tx.hash);
         });
     }

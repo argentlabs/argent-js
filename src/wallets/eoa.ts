@@ -18,6 +18,10 @@ export class EOA implements Wallet {
         this.address = address.toLowerCase()
     }
 
+    getName(): string {
+        return 'EOA'
+    }
+
     isWallet(codeSignature: string): Promise<boolean> {
         return Promise.resolve(codeSignature === '0xc5d24601')
     }

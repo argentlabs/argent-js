@@ -12,6 +12,9 @@ class EOA {
         }
         this.address = address.toLowerCase();
     }
+    getName() {
+        return 'EOA';
+    }
     isWallet(codeSignature) {
         return Promise.resolve(codeSignature === '0xc5d24601');
     }

@@ -5,7 +5,7 @@ import { Contract } from 'ethers/contract'
 
 const argentABI = [
     'function isValidSignature(bytes32 _message, bytes _signature) public view returns (bool)',
-    'function approveTokenAndCallContract(address _wallet, address _token, address _contract, uint256 _amount, bytes _data) external'
+    'function argent_approveTokenAndCallContract(address _wallet, address _token, address _contract, uint256 _amount, bytes _data) external'
 ];
 
 export class Argent implements Wallet {
@@ -25,6 +25,10 @@ export class Argent implements Wallet {
             throw new Error('Invalid signer address')
         }
         this.address = address
+    }
+
+    getName(): string {
+        return 'Argent'
     }
 
     async isWallet(codeSignature: string): Promise<boolean> {
@@ -48,7 +52,7 @@ export class Argent implements Wallet {
     }
 
     async approveAndCall(token: string, amount: number, contract: string, data: string): Promise<string> {
-        const tx = await this.contract.approveTokenAndCallContract(this.address, token, contract, amount, data)
+        const tx = await this.contract.argent_approveTokenAndCallContract(this.address, token, contract, amount, data)
         return Promise.resolve(tx.hash)
     }
 }
