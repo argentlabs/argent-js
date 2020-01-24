@@ -28,6 +28,20 @@ h2 {
   padding-top: 20px;
 }
 
-.App-link {
-  color: #61dafb;
+.card {
+  width: 600px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+code {
+  color: #ffffff !important;
 }

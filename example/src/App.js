@@ -9,54 +9,70 @@ import Connect from './views/Connect';
 import ExampleApp from './views/ExampleApp';
 
 const infuraId = process.env.REACT_APP_INFURA_ID;
-const chainId = process.env.REACT_APP_CHAIN_ID;
+
+const CONFIGURATION = {
+    1: {
+        erc20: "0x6b175474e89094c44da98b954eedeac495271d0f",
+        poolTogether: "0x29fe7D60DdF151E5b52e5FAB4f1325da6b2bD958",
+        tokenName: "DAI",
+        tokenAmount: "1",
+        etherscan: "https://etherscan.io"
+    },
+    3: {
+        erc20: "0x583cbbb8a8443b38abcc0c956bece47340ea1367",
+        poolTogether: "0x830CfFDd89746ac8b8F51c4aecd4e0a6e4A8a813",
+        tokenName: "BOKKY",
+        tokenAmount: "0.01",
+        etherscan: "https://ropsten.etherscan.io"
+    }
+}
 
 class App extends React.Component {
 
     state = {
         provider: null,
         wallet: null,
-        displayedAddress: null
-    }
-
-    async componentDidMount() {
-
+        address: null,
+        ens: null,
+        config: null,
+        network: null
     }
 
     onConnected = async (web3Provider) => {
         const provider = new ethers.providers.Web3Provider(web3Provider);
         const address = await provider.getSigner(0).getAddress();
-        const displayedAddress = await this.displayedAddress(address, provider);
+        const ens = await this.getENS(address, provider);
         const swu = new SmartWalletUtils(web3Provider, address);
         const wallet = await swu.getWallet();
-        this.setState({ provider, wallet, displayedAddress });
+        const network = await provider.getNetwork();
+        const config = CONFIGURATION[network.chainId];
+        this.setState({ provider, wallet, address, ens, config, network });
     }
 
-    displayedAddress = async (address, provider) => {
+    getENS = async (address, provider) => {
         const name = await provider.lookupAddress(address);
-        if (name === null) return address;
+        if (name === null) return null;
 
         const resolvedAddress = await provider.resolveName(name);
         if (address === resolvedAddress) return name;
 
-        return address;
+        return null;
     }
 
     disconnect = async () => {
         localStorage.removeItem('walletconnect'); // to make sure WC is disconnected
 
-        this.setState({ provider: null, wallet: null, displayedAddress: null });
-    }
-
-    onError = async (error) => {
-        console.log(error);
+        this.setState({ provider: null, wallet: null, address: null, ens: null, config: null, network: null });
     }
 
     render() {
         const {
             provider,
             wallet,
-            displayedAddress
+            address,
+            ens,
+            config,
+            network
         } = this.state;
 
         return (
@@ -64,14 +80,17 @@ class App extends React.Component {
                 <div className="App-content">
                     <h1>SmartWallet Utils Example Dapp</h1>
                     { provider === null ? (
-                        <Connect infuraId={infuraId} chainId={chainId} onConnected={this.onConnected} onError={this.onError}/>
+                        <Connect infuraId={infuraId} onConnected={this.onConnected}/>
                     ) : (
                         <div>
                             <div>
-                                <div>Hello {displayedAddress}</div>
+                                <div>Wallet Address: {address}</div>
+                                <div>Wallet ENS: {ens}</div>
+                                <div>Wallet Type: {wallet.getName()}</div>
+                                <div>Network: {network.name}</div>
                                 <Button size="sm" onClick={this.disconnect}>Disconnect</Button>
                             </div>
-                            <ExampleApp provider={provider} wallet={wallet} />
+                            <ExampleApp provider={provider} wallet={wallet} config={config} />
                         </div>
                     ) }
                 </div>

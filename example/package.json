@@ -19,7 +19,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm run build && npm run deploy:publish && npm run deploy:create-invalidation",
+    "deploy:publish": "aws s3 sync --acl public-read --delete build/ $S3_BUCKET",
+    "deploy:create-invalidation": "aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths '/*'"
   },
   "eslintConfig": {
     "extends": "react-app"
