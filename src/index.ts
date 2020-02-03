@@ -6,19 +6,19 @@ import { AsyncSendable, Web3Provider } from 'ethers/providers/web3-provider'
 
 export class SmartWalletUtils {
 
-    provider: ethers.providers.Provider
+    provider: Web3Provider
     wallets: Array<Wallet>
     address: string
 
-    constructor(web3Provider: AsyncSendable, address: string) {
-      
-        this.provider = new Web3Provider(web3Provider)
+    constructor(ethereum: AsyncSendable, address: string) {
+
+        this.provider = new Web3Provider(ethereum)
         if (!ethers.utils.getAddress(address)) {
             throw new Error('Invalid address')
         }
         this.address = address
         this.wallets = [
-            new EOA(this.address), 
+            new EOA(this.address),
             new Argent(this.address, this.provider)
         ]
     }

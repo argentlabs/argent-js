@@ -1,24 +1,25 @@
 import { Wallet, WalletType } from '../interfaces'
 import { utils } from 'ethers';
-import { Provider } from 'ethers/providers'
+import { Web3Provider } from 'ethers/providers/web3-provider'
 import { Contract } from 'ethers/contract'
 
 const argentABI = [
     'function isValidSignature(bytes32 _message, bytes _signature) public view returns (bool)',
-    'function argent_approveTokenAndCallContract(address _wallet, address _token, address _contract, uint256 _amount, bytes _data) external'
+    'function approveTokenAndCallContract(address _wallet, address _token, address _contract, uint256 _amount, bytes _data) external'
 ];
 
 export class Argent implements Wallet {
 
+    provider: Web3Provider
     contract: Contract
     type: WalletType
     address: string
     supportEIP1271: boolean
     supportApproveAndCall: boolean
 
-    constructor(address: string, provider: Provider) {
+    constructor(address: string, provider: Web3Provider) {
         this.type = WalletType.Argent
-        this.contract = new Contract(address, argentABI, provider)
+        this.provider = provider;
         this.supportEIP1271 = true
         this.supportApproveAndCall = true
         if (!utils.getAddress(address)) {
@@ -31,10 +32,18 @@ export class Argent implements Wallet {
         return 'Argent'
     }
 
+    async getWalletContract(): Promise<Contract> {
+        if (this.contract) return this.contract
+
+        const signer = await this.provider.getSigner(0)
+        this.contract = new Contract(this.address, argentABI, signer)
+        return this.contract
+    }
+
     async isWallet(codeSignature: string): Promise<boolean> {
         let success = false
         if (codeSignature === '0x83baa4b2') {
-            const impl = await this.contract.provider.getStorageAt(this.address, 0);
+            const impl = await this.provider.getStorageAt(this.address, 0)
             success = ['0xb1dd690cc9af7bb1a906a9b5a94f94191cc553ce'].includes(utils.hexDataSlice(impl, 12))
         }
         return Promise.resolve(success)
@@ -44,7 +53,8 @@ export class Argent implements Wallet {
         const hexArray = utils.arrayify(message)
         const hashMessage = utils.hashMessage(hexArray)
         try {
-            const returnValue = await this.contract.isValidSignature(hashMessage, signature)
+            const walletContract = await this.getWalletContract()
+            const returnValue = await walletContract.isValidSignature(hashMessage, signature)
             return Promise.resolve(returnValue)
         } catch (err) {
             return Promise.resolve(false)
@@ -52,7 +62,8 @@ export class Argent implements Wallet {
     }
 
     async approveAndCall(token: string, amount: number, contract: string, data: string): Promise<string> {
-        const tx = await this.contract.argent_approveTokenAndCallContract(this.address, token, contract, amount, data)
+        const walletContract = await this.getWalletContract()
+        const tx = await walletContract.approveTokenAndCallContract(this.address, token, contract, amount, data)
         return Promise.resolve(tx.hash)
     }
 }

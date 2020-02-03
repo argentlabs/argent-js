@@ -54,7 +54,8 @@ class Connect extends React.Component {
         }
 
         if (parseInt(ethereum.networkVersion, 10) !== parseInt(chainId, 10)) {
-            this.onError(new Error(`MetaMask: Wrong network version, should be ${chainId}`));
+            const networkName = (parseInt(chainId, 10) === 1) ? 'Main Ethereum Network' : 'Ropsten Test Network';
+            this.onError(new Error(`Please update your MetaMask network to ${networkName}`));
             return;
         }
 

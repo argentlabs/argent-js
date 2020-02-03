@@ -14,8 +14,8 @@ const eoa_1 = require("./wallets/eoa");
 const argent_1 = require("./wallets/argent");
 const web3_provider_1 = require("ethers/providers/web3-provider");
 class SmartWalletUtils {
-    constructor(web3Provider, address) {
-        this.provider = new web3_provider_1.Web3Provider(web3Provider);
+    constructor(ethereum, address) {
+        this.provider = new web3_provider_1.Web3Provider(ethereum);
         if (!ethers_1.ethers.utils.getAddress(address)) {
             throw new Error('Invalid address');
         }

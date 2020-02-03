@@ -33,7 +33,7 @@ h2 {
   margin-bottom: 20px;
 }
 
-.btn {
+.btn, .alert {
   margin-top: 5px;
   margin-bottom: 15px;
 }

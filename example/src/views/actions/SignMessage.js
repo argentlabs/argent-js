@@ -8,7 +8,7 @@ class SignMessage extends React.Component {
         response: []
     }
 
-    onSign = async () => {
+    onSign = async (method) => {
         const {
             provider,
             wallet
@@ -20,8 +20,15 @@ class SignMessage extends React.Component {
         const arrayishMessage = ethers.utils.toUtf8Bytes(message);
         const hexMessage = ethers.utils.hexlify(arrayishMessage);
 
-        const address = await provider.getSigner(0).getAddress();
-        const signature = await provider.send('personal_sign', [hexMessage, address]);
+        const signer = provider.getSigner(0);
+        const address = await signer.getAddress();
+
+        let signature;
+        if (method === 'personal_sign') {
+            signature = await provider.send('personal_sign', [hexMessage, address]);
+        } else if (method === 'eth_sign') {
+            signature = await signer.signMessage(arrayishMessage);
+        }
 
         const isValid = await wallet.isValidSignature(hexMessage, signature);
 
@@ -66,7 +73,8 @@ class SignMessage extends React.Component {
                 <Card body inverse color="primary">
                     <CardTitle>Sign and Verify Message</CardTitle>
                     <CardText>Ask the wallet to sign the message <code>"cogito ergo sum"</code> using the method <code>personal_sign</code> and verify the signature (<code>ecrecover</code> for EOA, EIP-1271 for smart contract based wallets)</CardText>
-                    <Button onClick={this.onSign} color="secondary">Sign</Button>
+                    <Button onClick={() => this.onSign('personal_sign')} color="secondary">Sign with personal_sign</Button>
+                    <Button onClick={() => this.onSign('eth_sign')} color="secondary">Sign with eth_sign</Button>
                 </Card>
             </React.Fragment>
         );
