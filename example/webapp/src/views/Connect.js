@@ -1,5 +1,6 @@
 import React from 'react';
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import WalletLink from 'walletlink'
 import { Button, CustomInput, Alert } from 'reactstrap';
 
 class Connect extends React.Component {
@@ -25,11 +26,38 @@ class Connect extends React.Component {
 
         this.setState({ error: null });
 
-        const wcProvider = new WalletConnectProvider({ infuraId, chainId });
+        const ethereum = new WalletConnectProvider({ infuraId, chainId });
 
         try {
-            await wcProvider.enable();
-            this.props.onConnected(wcProvider);
+            await ethereum.enable();
+            this.props.onConnected(ethereum);
+        } catch (error) {
+            this.onError(error);
+        }
+    }
+
+    onConnectWithWalletLink = async () => {
+        const {
+            infuraId
+        } = this.props;
+
+        const {
+            chainId
+        } = this.state;
+
+        this.setState({ error: null });
+
+        const walletLink = new WalletLink({
+            appName: 'Example Dapp',
+            appLogoUrl: 'https://mk0hurulohuqn22ioauu.kinstacdn.com/wp-content/uploads/2019/02/Argent-Guard-Circle.png'
+        })
+
+        const url = `https://mainnet.infura.io/v3/${infuraId}`;
+        const ethereum = walletLink.makeWeb3Provider(url, chainId);
+
+        try {
+            await ethereum.enable();
+            this.props.onConnected(ethereum);
         } catch (error) {
             this.onError(error);
         }
@@ -78,8 +106,9 @@ class Connect extends React.Component {
 
         return (
             <div>
-                <Button color="warning" onClick={this.onConnectWithMetaMask}>Connect With MetaMask</Button>{' '}
+                <Button color="warning" onClick={this.onConnectWithMetaMask}>Connect With MetaMask</Button>
                 <Button color="primary" onClick={this.onConnectWithWalletConnect}>Connect With Wallet Connect</Button>
+                <Button color="info" onClick={this.onConnectWithWalletLink}>Connect With Wallet Link</Button>
                 <CustomInput
                     type="switch"
                     name="networkSwitch"

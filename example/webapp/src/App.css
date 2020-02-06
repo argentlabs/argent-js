@@ -36,6 +36,7 @@ h2 {
 .btn, .alert {
   margin-top: 5px;
   margin-bottom: 15px;
+  margin-right: 10px;
 }
 
 .card-title {
