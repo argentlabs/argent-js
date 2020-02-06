@@ -14,7 +14,6 @@
     "typescript": "^3.7.3"
   },
   "dependencies": {
-    "ethers": "^4.0.40",
-    "web3": "^1.2.4"
+    "ethers": "^4.0.44"
   }
 }
