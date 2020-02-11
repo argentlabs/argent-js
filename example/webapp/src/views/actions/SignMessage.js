@@ -11,7 +11,7 @@ class SignMessage extends React.Component {
     onSign = async (method) => {
         const {
             provider,
-            wallet
+            walletHelper
         } = this.props;
 
         this.resetResponse();
@@ -30,7 +30,7 @@ class SignMessage extends React.Component {
             signature = await signer.signMessage(arrayishMessage);
         }
 
-        const isValid = await wallet.isValidSignature(hexMessage, signature);
+        const isValid = await walletHelper.isValidSignature(hexMessage, signature);
 
         const response = [
             `message: ${message}`,

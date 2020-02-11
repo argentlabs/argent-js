@@ -31,7 +31,7 @@ class App extends React.Component {
 
     state = {
         provider: null,
-        wallet: null,
+        walletHelper: null,
         address: null,
         ens: null,
         config: null,
@@ -43,10 +43,10 @@ class App extends React.Component {
         const address = await provider.getSigner(0).getAddress();
         const ens = await this.getENS(address, provider);
         const swu = new SmartWalletUtils(web3Provider, address);
-        const wallet = await swu.getWallet();
+        const walletHelper = await swu.getWalletHelper();
         const network = await provider.getNetwork();
         const config = CONFIGURATION[network.chainId];
-        this.setState({ provider, wallet, address, ens, config, network });
+        this.setState({ provider, walletHelper, address, ens, config, network });
     }
 
     getENS = async (address, provider) => {
@@ -68,7 +68,7 @@ class App extends React.Component {
     render() {
         const {
             provider,
-            wallet,
+            walletHelper,
             address,
             ens,
             config,
@@ -86,11 +86,11 @@ class App extends React.Component {
                             <div>
                                 <div>Wallet Address: {address}</div>
                                 <div>Wallet ENS: {ens}</div>
-                                <div>Wallet Type: {wallet.getName()}</div>
+                                <div>Wallet Type: {walletHelper.getName()}</div>
                                 <div>Network: {network.name}</div>
                                 <Button size="sm" onClick={this.disconnect}>Disconnect</Button>
                             </div>
-                            <ExampleApp provider={provider} wallet={wallet} config={config} />
+                            <ExampleApp provider={provider} walletHelper={walletHelper} config={config} />
                         </div>
                     ) }
                 </div>

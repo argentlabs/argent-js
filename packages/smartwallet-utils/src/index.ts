@@ -23,7 +23,7 @@ export class SmartWalletUtils {
         ]
     }
 
-    async getWallet(): Promise<Wallet> {
+    async getWalletHelper(): Promise<Wallet> {
 
         let wallet: Wallet
 

@@ -35,12 +35,12 @@ class ApproveAndCall extends React.Component {
     onApproveAndCall = async () => {
         const {
             provider,
-            wallet
+            walletHelper
         } = this.props;
 
         try {
             const data = this.poolTogetherContract.interface.functions.depositPool.encode([ this.numberOfTokens ]);
-            const txHash = await wallet.approveAndCall(this.erc20Contract.address, this.numberOfTokens, this.poolTogetherContract.address, data);
+            const txHash = await walletHelper.approveAndCall(this.erc20Contract.address, this.numberOfTokens, this.poolTogetherContract.address, data);
             this.setState({
                 enableApproveAndCall: false,
                 alert: {

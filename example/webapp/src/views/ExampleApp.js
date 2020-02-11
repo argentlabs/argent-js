@@ -8,17 +8,17 @@ class ExampleApp extends React.Component {
     render() {
         const {
             provider,
-            wallet,
+            walletHelper,
             config
         } = this.props;
 
         return (
             <React.Fragment>
-                <SignMessage provider={provider} wallet={wallet} />
-                { (wallet.supportApproveAndCall === false) ? (
+                <SignMessage provider={provider} walletHelper={walletHelper} />
+                { (walletHelper.supportApproveAndCall === false) ? (
                     <ApproveThenCall provider={provider} config={config} />
                 ) : (
-                    <ApproveAndCall provider={provider} wallet={wallet} config={config} />
+                    <ApproveAndCall provider={provider} walletHelper={walletHelper} config={config} />
                 ) }
             </React.Fragment>
         );
