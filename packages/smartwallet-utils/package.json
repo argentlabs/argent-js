@@ -1,14 +1,15 @@
 {
   "name": "smartwallet-utils",
   "version": "0.0.1",
-  "description": "utilities for smart-contract wallets",
+  "description": "Utilities for smart-contract wallets",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "test": "mocha -r ts-node/register test/**/*.spec.ts"
   },
-  "author": "Gerald Goldstein, Julien Niset",
-  "license": "ISC",
+  "author": "Argent <argent.xyz>",
+  "homepage": "https://github.com/argentlabs/argent-js/tree/master/packages/smartwallet-utils",
+  "license": "LGPL-3.0",
   "devDependencies": {
     "@types/chai": "^4.2.8",
     "@types/mocha": "^7.0.1",
