@@ -4,14 +4,20 @@
   "description": "utilities for smart-contract wallets",
   "main": "dist/index.js",
   "scripts": {
-    "start": "tsc && node test/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts"
   },
   "author": "Gerald Goldstein, Julien Niset",
   "license": "ISC",
   "devDependencies": {
+    "@types/chai": "^4.2.8",
+    "@types/mocha": "^7.0.1",
+    "chai": "^4.2.0",
+    "mocha": "^7.0.1",
+    "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.3"
+    "typescript": "^3.7.3",
+    "web3": "^1.2.6"
   },
   "dependencies": {
     "ethers": "^4.0.44"
