@@ -8,5 +8,12 @@
     "sourceMap": true,
     "outDir": "dist"
   },
+  "include": [
+      "src/**/*"
+  ],
+  "exclude": [
+      "node_modules",
+      "**/*.spec.ts"
+  ],
   "lib": ["es2015"]
 }

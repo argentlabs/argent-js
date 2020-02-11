@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 import { ethers } from "ethers";
-import { SmartWalletUtils } from 'smartwallet-utils';
+import { SmartWalletUtils } from '@argent/smartwallet-utils';
 
 import './App.css';
 

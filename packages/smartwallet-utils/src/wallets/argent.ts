@@ -62,8 +62,14 @@ export class Argent implements Wallet {
     }
 
     async approveAndCall(token: string, amount: number, contract: string, data: string): Promise<string> {
+        const erc20Interface = new utils.Interface(['function approve(address spender, uint256 amount) external returns (bool)'])
+        const erc20Data = erc20Interface.functions.approve.encode([contract, amount])
+        const erc20Gas = await this.provider.estimateGas({ from: this.address, to: token, data: erc20Data })
+        const callContractGas = await this.provider.estimateGas({ from: this.address, to: contract, data })
+        const gasLimit = erc20Gas.toNumber() + callContractGas.toNumber()
+
         const walletContract = await this.getWalletContract()
-        const tx = await walletContract.approveTokenAndCallContract(this.address, token, contract, amount, data)
+        const tx = await walletContract.approveTokenAndCallContract(this.address, token, contract, amount, data, { gasLimit })
         return Promise.resolve(tx.hash)
     }
 }

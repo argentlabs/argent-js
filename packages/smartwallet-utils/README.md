@@ -1,9 +1,9 @@
-# smart-wallet-utils
+# smartwallet-utils
 
 ## Installation
 
 ```bash
-npm install @argent/smart-wallet-utils
+npm install @argent/smartwallet-utils
 ```
 
 ## Usage
