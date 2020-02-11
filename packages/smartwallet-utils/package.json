@@ -1,5 +1,5 @@
 {
-  "name": "smartwallet-utils",
+  "name": "@argent/smartwallet-utils",
   "version": "0.0.1",
   "description": "Utilities for smart-contract wallets",
   "main": "dist/index.js",
