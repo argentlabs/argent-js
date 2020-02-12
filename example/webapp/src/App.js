@@ -78,7 +78,7 @@ class App extends React.Component {
         return (
             <div className="App">
                 <div className="App-content">
-                    <h1>SmartWallet Utils Example Dapp</h1>
+                    <h1>Argent Example Dapp</h1>
                     { provider === null ? (
                         <Connect infuraId={infuraId} onConnected={this.onConnected}/>
                     ) : (
