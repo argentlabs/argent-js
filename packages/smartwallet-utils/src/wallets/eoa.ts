@@ -32,7 +32,7 @@ export class EOA implements Wallet {
         return Promise.resolve(msgSigner.toLowerCase() === this.address)
     }
 
-    approveAndCall(token: string, amount: number, contract: string, data: string): Promise<string> {
+    approveAndCall(token: string, amount: number, contract: string, data: string, gasLimit: number): Promise<string> {
         return Promise.reject(new Error('EOA does not support approveAndCall'))
     }
 }

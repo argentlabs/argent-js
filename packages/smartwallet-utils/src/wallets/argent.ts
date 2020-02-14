@@ -8,6 +8,8 @@ const argentABI = [
     'function approveTokenAndCallContract(address _wallet, address _token, address _contract, uint256 _amount, bytes _data) external'
 ];
 
+const DEFAULT_GAS_APPROVECALL = 500000
+
 export class Argent implements Wallet {
 
     provider: Web3Provider
@@ -61,20 +63,26 @@ export class Argent implements Wallet {
         }
     }
 
-    async approveAndCall(token: string, amount: number, contract: string, data: string): Promise<string> {
-        let gasLimit = 125000
-        try {
-            const erc20Interface = new utils.Interface(['function approve(address spender, uint256 amount) external returns (bool)'])
-            const erc20Data = erc20Interface.functions.approve.encode([contract, amount])
-            const erc20Gas = await this.provider.estimateGas({ from: this.address, to: token, data: erc20Data })
-            const callContractGas = await this.provider.estimateGas({ from: this.address, to: contract, data })
-            gasLimit = erc20Gas.toNumber() + callContractGas.toNumber()
-        } catch (err) {
-            console.log(err)
+    async approveAndCall(token: string, amount: number, contract: string, data: string, gasLimit: number = 0): Promise<string> {
+        let gas = gasLimit
+        if (gas = 0) {
+            try {
+                gas = await this.estimateGasApproveAndCall(token, amount, contract, data)
+            } catch (error) {
+                gas = DEFAULT_GAS_APPROVECALL
+            }
         }
 
         const walletContract = await this.getWalletContract()
-        const tx = await walletContract.approveTokenAndCallContract(this.address, token, contract, amount, data, { gasLimit })
+        const tx = await walletContract.approveTokenAndCallContract(this.address, token, contract, amount, data, { gasLimit: gas })
         return Promise.resolve(tx.hash)
+    }
+
+    async estimateGasApproveAndCall(token: string, amount: number, contract: string, data: string) {
+        const erc20Interface = new utils.Interface(['function approve(address spender, uint256 amount) external returns (bool)'])
+        const erc20Data = erc20Interface.functions.approve.encode([contract, amount])
+        const erc20Gas = await this.provider.estimateGas({ from: this.address, to: token, data: erc20Data })
+        const callContractGas = await this.provider.estimateGas({ from: this.address, to: contract, data })
+        return erc20Gas.toNumber() + callContractGas.toNumber()
     }
 }
