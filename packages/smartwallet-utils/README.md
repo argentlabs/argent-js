@@ -31,4 +31,4 @@ if (walletHelper.supportApproveAndCall) {
 
 ## License
 
-Released under [LGPL-3.0](LICENSE)
+Released under [MIT](LICENSE)
