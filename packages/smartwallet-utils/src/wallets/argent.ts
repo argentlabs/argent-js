@@ -65,7 +65,7 @@ export class Argent implements Wallet {
 
     async approveAndCall(token: string, amount: number, contract: string, data: string, gasLimit: number = 0): Promise<string> {
         let gas = gasLimit
-        if (gas = 0) {
+        if (gas === 0) {
             try {
                 gas = await this.estimateGasApproveAndCall(token, amount, contract, data)
             } catch (error) {
