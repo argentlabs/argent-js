@@ -1,7 +1,5 @@
 import { Wallet, WalletType } from '../interfaces'
-import { utils } from 'ethers';
-import { Web3Provider } from 'ethers/providers/web3-provider'
-import { Contract } from 'ethers/contract'
+import { ethers, utils } from 'ethers'
 
 const argentABI = [
     'function isValidSignature(bytes32 _message, bytes _signature) public view returns (bool)',
@@ -12,14 +10,14 @@ const DEFAULT_GAS_APPROVECALL = 500000
 
 export class Argent implements Wallet {
 
-    provider: Web3Provider
-    contract: Contract
+    provider: ethers.providers.Web3Provider
+    contract: ethers.Contract
     type: WalletType
     address: string
     supportEIP1271: boolean
     supportApproveAndCall: boolean
 
-    constructor(address: string, provider: Web3Provider) {
+    constructor(address: string, provider: ethers.providers.Web3Provider) {
         this.type = WalletType.Argent
         this.provider = provider;
         this.supportEIP1271 = true
@@ -34,11 +32,11 @@ export class Argent implements Wallet {
         return 'Argent'
     }
 
-    async getWalletContract(): Promise<Contract> {
+    async getWalletContract(): Promise<ethers.Contract> {
         if (this.contract) return this.contract
 
         const signer = await this.provider.getSigner(0)
-        this.contract = new Contract(this.address, argentABI, signer)
+        this.contract = new ethers.Contract(this.address, argentABI, signer)
         return this.contract
     }
 
