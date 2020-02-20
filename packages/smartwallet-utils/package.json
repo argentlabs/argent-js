@@ -1,10 +1,10 @@
 {
   "name": "@argent/smartwallet-utils",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Utilities for smart-contract wallets",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf ./dist && tsc",
     "test": "mocha -r ts-node/register test/**/*.spec.ts"
   },
   "author": "Argent <argent.xyz>",
