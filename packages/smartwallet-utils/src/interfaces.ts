@@ -1,4 +1,4 @@
-import { Contract } from 'ethers/contract'
+import { ethers } from 'ethers'
 
 export enum WalletType {
     EOA,
@@ -8,7 +8,7 @@ export enum WalletType {
 export interface Wallet {
     type: WalletType
     address: string
-    contract?: Contract
+    contract?: ethers.Contract
     supportEIP1271: boolean
     supportApproveAndCall: boolean
     getName: () => string
