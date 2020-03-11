@@ -23,20 +23,15 @@ export class SmartWalletUtils {
     }
 
     async getWalletHelper(): Promise<Wallet> {
-
-        let wallet: Wallet
-
         const code = await this.provider.getCode(this.address)
         const codeSignature = ethers.utils.keccak256(code).slice(0, 10)
         for (let index in this.wallets) {
-            wallet = this.wallets[index]
+            const wallet = this.wallets[index]
             const isWallet = await wallet.isWallet(codeSignature)
-            if (isWallet) break;
+            if (isWallet === true) return wallet
         }
-        if(!wallet) {
-            throw new Error('Unknown wallet type')
-        }
-        return wallet
+
+        return this.wallets[0]
     }
 
 }

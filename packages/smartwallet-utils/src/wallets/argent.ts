@@ -7,6 +7,16 @@ const argentABI = [
 ];
 
 const DEFAULT_GAS_APPROVECALL = 500000
+const PROXYWALLET_SIG = [
+    '0xab8c7f78',
+    '0x83baa4b2'
+]
+const BASEWALLET_IMPL = [
+    '0xb1dd690cc9af7bb1a906a9b5a94f94191cc553ce', // prod Feb-04-2019
+    '0x8cbe893fb3372e3ce1e63ad0262b2a544fa1fb9c', // staging Jan-24-2019
+    '0x609282d2d8f9ba4bb87ac9c38de20ed5de86596b', // staging Dec-06-2019
+    '0xb11da8fbd8126f4f66c093070ecb8316734a7130', // staging Mar-10-2020
+] // mainnet only
 
 export class Argent implements Wallet {
 
@@ -42,9 +52,14 @@ export class Argent implements Wallet {
 
     async isWallet(codeSignature: string): Promise<boolean> {
         let success = false
-        if (codeSignature === '0x83baa4b2') {
-            const impl = await this.provider.getStorageAt(this.address, 0)
-            success = ['0xb1dd690cc9af7bb1a906a9b5a94f94191cc553ce'].includes(utils.hexDataSlice(impl, 12))
+        if (PROXYWALLET_SIG.includes(codeSignature)) {
+            const network = await this.provider.getNetwork()
+            if (network.chainId === 1) {
+                const impl = await this.provider.getStorageAt(this.address, 0)
+                success = BASEWALLET_IMPL.includes(utils.hexDataSlice(impl, 12))
+            } else {
+                success = true
+            }
         }
         return Promise.resolve(success)
     }

@@ -15,7 +15,7 @@ const CONFIGURATION = {
         erc20: "0x6b175474e89094c44da98b954eedeac495271d0f",
         poolTogether: "0x29fe7D60DdF151E5b52e5FAB4f1325da6b2bD958",
         tokenName: "DAI",
-        tokenAmount: "1",
+        tokenAmount: "10",
         etherscan: "https://etherscan.io"
     },
     3: {
