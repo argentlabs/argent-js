@@ -13,6 +13,7 @@ const PROXYWALLET_SIG = [
 ]
 const BASEWALLET_IMPL = [
     '0xb1dd690cc9af7bb1a906a9b5a94f94191cc553ce', // prod Feb-04-2019
+    '0xb6d64221451edbac7736d4c3da7fc827457dec03', // prod Mar-30-2020
     '0x8cbe893fb3372e3ce1e63ad0262b2a544fa1fb9c', // staging Jan-24-2019
     '0x609282d2d8f9ba4bb87ac9c38de20ed5de86596b', // staging Dec-06-2019
     '0xb11da8fbd8126f4f66c093070ecb8316734a7130', // staging Mar-10-2020
