@@ -25,7 +25,7 @@ Trigger an Approve ERC20 tokens and call contract in one single transaction, if 
 
 ```js
 if (walletHelper.supportApproveAndCall) {
-    const txHash = await walletHelper.approveAndCall(erc20Contract, amount, contract, data, gasLimit);
+    const txHash = await walletHelper.approveAndCall(erc20Contract, amount, spender, contract, data, gasLimit);
 }
 ```
 
