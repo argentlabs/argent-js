@@ -2,14 +2,15 @@ import { Wallet, WalletType } from '../interfaces'
 import { ethers, utils } from 'ethers'
 
 const argentABI = [
-    'function isValidSignature(bytes32 _message, bytes _signature) public view returns (bool)',
-    'function approveTokenAndCallContract(address _wallet, address _token, address _contract, uint256 _amount, bytes _data) external'
+  "function isValidSignature(bytes32 _message, bytes _signature) public view returns (bool)",
+  "function approveTokenAndCallContract(address _wallet, address _token, address spender, uint256 _amount, address _contract, bytes _data) external",
 ];
 
 const DEFAULT_GAS_APPROVECALL = 500000
 const PROXYWALLET_SIG = [
     '0xab8c7f78',
-    '0x83baa4b2'
+    '0x83baa4b2',
+    '0x0b44c9be'
 ]
 const BASEWALLET_IMPL = [
     '0xb1dd690cc9af7bb1a906a9b5a94f94191cc553ce', // prod Feb-04-2019
@@ -77,7 +78,7 @@ export class Argent implements Wallet {
         }
     }
 
-    async approveAndCall(token: string, amount: number, contract: string, data: string, gasLimit: number = 0): Promise<string> {
+    async approveAndCall(token: string, amount: number, spender: string, contract: string, data: string, gasLimit: number = 0): Promise<string> {
         let gas = gasLimit
         if (gas === 0) {
             try {
@@ -88,7 +89,15 @@ export class Argent implements Wallet {
         }
 
         const walletContract = await this.getWalletContract()
-        const tx = await walletContract.approveTokenAndCallContract(this.address, token, contract, amount, data, { gasLimit: gas })
+        const tx = await walletContract.approveTokenAndCallContract(
+          this.address,
+          token,
+          spender,
+          amount,
+          contract,
+          data,
+          { gasLimit: gas }
+        );
         return Promise.resolve(tx.hash)
     }
 
