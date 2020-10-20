@@ -9,7 +9,7 @@ export class SmartWalletUtils {
     wallets: Array<Wallet>
     address: string
 
-    constructor(ethereum: ethers.providers.AsyncSendable, address: string) {
+    constructor(ethereum: ethers.providers.ExternalProvider, address: string) {
 
         this.provider = new ethers.providers.Web3Provider(ethereum)
         if (!ethers.utils.getAddress(address)) {
@@ -24,14 +24,10 @@ export class SmartWalletUtils {
 
     async getWalletHelper(): Promise<Wallet> {
         const code = await this.provider.getCode(this.address)
-        const codeSignature = ethers.utils.keccak256(code).slice(0, 10)
-        for (let index in this.wallets) {
-            const wallet = this.wallets[index]
-            const isWallet = await wallet.isWallet(codeSignature)
+        for (const wallet of this.wallets) {
+            const isWallet = await wallet.isWallet(code)
             if (isWallet === true) return wallet
         }
-
         return this.wallets[0]
     }
-
 }

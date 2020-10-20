@@ -22,8 +22,8 @@ export class EOA implements Wallet {
         return 'EOA'
     }
 
-    isWallet(codeSignature: string): Promise<boolean> {
-        return Promise.resolve(codeSignature === '0xc5d24601')
+    isWallet(code: string): Promise<boolean> {
+        return Promise.resolve(code === '0x')
     }
 
     isValidSignature(message: string, signature: string): Promise<boolean> {

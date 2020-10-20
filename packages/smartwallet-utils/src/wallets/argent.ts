@@ -2,23 +2,19 @@ import { Wallet, WalletType } from '../interfaces'
 import { ethers, utils } from 'ethers'
 
 const argentABI = [
-  "function isValidSignature(bytes32 _message, bytes _signature) public view returns (bool)",
-  "function approveTokenAndCallContract(address _wallet, address _token, address spender, uint256 _amount, address _contract, bytes _data) external",
+  'function isValidSignature(bytes32 _message, bytes _signature) public view returns (bool)',
+  'function approveTokenAndCallContract(address _wallet, address _token, address spender, uint256 _amount, address _contract, bytes _data) external'
+];
+
+const detectorABI = [
+  'function isArgentWallet(address _wallet) external view returns (bool)'
 ];
 
 const DEFAULT_GAS_APPROVECALL = 500000
-const PROXYWALLET_SIG = [
-    '0xab8c7f78',
-    '0x83baa4b2',
-    '0x0b44c9be'
-]
-const BASEWALLET_IMPL = [
-    '0xb1dd690cc9af7bb1a906a9b5a94f94191cc553ce', // prod Feb-04-2019
-    '0xb6d64221451edbac7736d4c3da7fc827457dec03', // prod Mar-30-2020
-    '0x8cbe893fb3372e3ce1e63ad0262b2a544fa1fb9c', // staging Jan-24-2019
-    '0x609282d2d8f9ba4bb87ac9c38de20ed5de86596b', // staging Dec-06-2019
-    '0xb11da8fbd8126f4f66c093070ecb8316734a7130', // staging Mar-10-2020
-] // mainnet only
+const WALLET_DETECTOR_ADDRESS = {
+    1: '0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8',
+    3: '0xB5F49f8899D61b89DC8093e646F327d4E10e1277'
+}
 
 export class Argent implements Wallet {
 
@@ -52,18 +48,14 @@ export class Argent implements Wallet {
         return this.contract
     }
 
-    async isWallet(codeSignature: string): Promise<boolean> {
-        let success = false
-        if (PROXYWALLET_SIG.includes(codeSignature)) {
-            const network = await this.provider.getNetwork()
-            if (network.chainId === 1) {
-                const impl = await this.provider.getStorageAt(this.address, 0)
-                success = BASEWALLET_IMPL.includes(utils.hexDataSlice(impl, 12))
-            } else {
-                success = true
-            }
-        }
-        return Promise.resolve(success)
+    async isWallet(code: string): Promise<boolean> {
+        const network = await this.provider.getNetwork()
+        if (WALLET_DETECTOR_ADDRESS.hasOwnProperty(network.chainId) === false) return Promise.resolve(false)
+
+        const detector = new ethers.Contract(WALLET_DETECTOR_ADDRESS[network.chainId], detectorABI, this.provider)
+        const result = await detector.isArgentWallet(this.address)
+
+        return Promise.resolve(result);
     }
 
     async isValidSignature(message: string, signature: string): Promise<boolean> {
@@ -103,7 +95,7 @@ export class Argent implements Wallet {
 
     async estimateGasApproveAndCall(token: string, amount: number, contract: string, data: string) {
         const erc20Interface = new utils.Interface(['function approve(address spender, uint256 amount) external returns (bool)'])
-        const erc20Data = erc20Interface.functions.approve.encode([contract, amount])
+        const erc20Data = erc20Interface.encodeFunctionData('approve', [contract, amount])
         const erc20Gas = await this.provider.estimateGas({ from: this.address, to: token, data: erc20Data })
         const callContractGas = await this.provider.estimateGas({ from: this.address, to: contract, data })
         return erc20Gas.toNumber() + callContractGas.toNumber()
