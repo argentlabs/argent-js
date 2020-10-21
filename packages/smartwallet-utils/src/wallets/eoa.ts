@@ -1,6 +1,8 @@
 import { Wallet, WalletType } from '../interfaces'
 import { ethers } from 'ethers';
 
+const EOA_CODEHASH = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
+
 export class EOA implements Wallet {
 
     type: WalletType
@@ -22,8 +24,8 @@ export class EOA implements Wallet {
         return 'EOA'
     }
 
-    isWallet(code: string): Promise<boolean> {
-        return Promise.resolve(code === '0x')
+    isWallet(codeHash: string): Promise<boolean> {
+        return Promise.resolve(codeHash === EOA_CODEHASH)
     }
 
     isValidSignature(message: string, signature: string): Promise<boolean> {

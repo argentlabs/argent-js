@@ -24,8 +24,9 @@ export class SmartWalletUtils {
 
     async getWalletHelper(): Promise<Wallet> {
         const code = await this.provider.getCode(this.address)
+        const codeHash = ethers.utils.keccak256(code)
         for (const wallet of this.wallets) {
-            const isWallet = await wallet.isWallet(code)
+            const isWallet = await wallet.isWallet(codeHash)
             if (isWallet === true) return wallet
         }
         return this.wallets[0]

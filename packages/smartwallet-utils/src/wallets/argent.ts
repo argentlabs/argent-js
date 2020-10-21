@@ -48,7 +48,7 @@ export class Argent implements Wallet {
         return this.contract
     }
 
-    async isWallet(code: string): Promise<boolean> {
+    async isWallet(codeHash: string): Promise<boolean> {
         const network = await this.provider.getNetwork()
         if (WALLET_DETECTOR_ADDRESS.hasOwnProperty(network.chainId) === false) return Promise.resolve(false)
 

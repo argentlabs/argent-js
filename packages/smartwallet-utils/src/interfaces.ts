@@ -12,7 +12,7 @@ export interface Wallet {
     supportEIP1271: boolean
     supportApproveAndCall: boolean
     getName: () => string
-    isWallet: (code: string) => Promise<boolean>
+    isWallet: (codeHash: string) => Promise<boolean>
     isValidSignature: (message: string, signature: string) => Promise<boolean>
     approveAndCall: (token: string, amount: number, spender: string, contract: string, data: string, gasLimit: number) => Promise<string>
 }
