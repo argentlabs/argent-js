@@ -8,9 +8,18 @@ import 'mocha';
 
 const web3Provider = new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/7d0d81d0919f4f05b9ab6634be01ee73');
 
-describe('EOA test', () => {
+describe('EOA (empty) test', () => {
     it('wallet type should be EOA', async () => {
         const swu = new SmartWalletUtils(web3Provider, '0x65d8fbcdeb9ef8b9251394d92cc513610cc2effb');
+        const walletHelper = await swu.getWalletHelper();
+        const result = walletHelper.type;
+        expect(result).to.equal(WalletType.EOA);
+    });
+});
+
+describe('EOA (with txs) test', () => {
+    it('wallet type should be EOA', async () => {
+        const swu = new SmartWalletUtils(web3Provider, '0x710129558E8ffF5caB9c0c9c43b99d79Ed864B99');
         const walletHelper = await swu.getWalletHelper();
         const result = walletHelper.type;
         expect(result).to.equal(WalletType.EOA);
