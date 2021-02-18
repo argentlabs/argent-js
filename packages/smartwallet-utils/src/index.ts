@@ -1,17 +1,18 @@
 import { ethers } from 'ethers'
-import { Wallet } from './interfaces'
+import { Wallet, Web3Provider } from './interfaces';
 import { EOA } from './wallets/eoa'
 import { Argent } from './wallets/argent'
 
 export class SmartWalletUtils {
 
-    provider: ethers.providers.Web3Provider
+    provider: Web3Provider
     wallets: Array<Wallet>
     address: string
 
-    constructor(ethereum: ethers.providers.ExternalProvider, address: string) {
+    constructor(ethereum: ethers.providers.ExternalProvider | Web3Provider, address: string) {
 
-        this.provider = new ethers.providers.Web3Provider(ethereum)
+        this.provider = ethers.providers.Provider.isProvider(ethereum) ?
+          ethereum : new ethers.providers.Web3Provider(ethereum)
         if (!ethers.utils.getAddress(address)) {
             throw new Error('Invalid address')
         }

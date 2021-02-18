@@ -11,7 +11,7 @@ npm install @argent/smartwallet-utils
 Create an instance of `SmartWalletUtils`
 
 ```js
-const swu = new SmartWalletUtils(web3Provider, address);
+const swu = new SmartWalletUtils(Web3Provider, address);
 const walletHelper = await swu.getWalletHelper();
 ```
 

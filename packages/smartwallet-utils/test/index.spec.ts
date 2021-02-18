@@ -5,15 +5,21 @@ import Web3 from 'web3';
 
 import { expect } from 'chai';
 import 'mocha';
+import { ethers } from 'ethers';
 
 const web3Provider = new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/7d0d81d0919f4f05b9ab6634be01ee73');
-
+const ethersProvider = new ethers.providers.InfuraProvider("ropsten");
 describe('EOA (empty) test', () => {
     it('wallet type should be EOA', async () => {
         const swu = new SmartWalletUtils(web3Provider, '0x65d8fbcdeb9ef8b9251394d92cc513610cc2effb');
         const walletHelper = await swu.getWalletHelper();
         const result = walletHelper.type;
         expect(result).to.equal(WalletType.EOA);
+
+        const swu1 = new SmartWalletUtils(ethersProvider, '0x65d8fbcdeb9ef8b9251394d92cc513610cc2effb');
+        const walletHelper1 = await swu1.getWalletHelper();
+        const result1 = walletHelper1.type;
+        expect(result1).to.equal(WalletType.EOA);
     });
 });
 
@@ -23,20 +29,30 @@ describe('EOA (with txs) test', () => {
         const walletHelper = await swu.getWalletHelper();
         const result = walletHelper.type;
         expect(result).to.equal(WalletType.EOA);
+
+        const swu1 = new SmartWalletUtils(ethersProvider, '0x710129558E8ffF5caB9c0c9c43b99d79Ed864B99');
+        const walletHelper1 = await swu1.getWalletHelper();
+        const result1 = walletHelper1.type;
+        expect(result1).to.equal(WalletType.EOA);
     });
 });
 
 describe('Argent Wallet test', () => {
     let walletHelper;
+    let walletHelper1;
 
     before(async () => {
         const swu = new SmartWalletUtils(web3Provider, '0x703308521617DFBb236860Ab07eBa9d2eF990746');
         walletHelper = await swu.getWalletHelper();
+
+        const swu1 = new SmartWalletUtils(ethersProvider, '0x703308521617DFBb236860Ab07eBa9d2eF990746');
+        walletHelper1 = await swu1.getWalletHelper();
     });
 
     it('wallet type should be Argent', async () => {
         const result = walletHelper.type;
         expect(result).to.equal(WalletType.Argent);
+        expect(walletHelper1.type).to.equal(WalletType.Argent);
     });
 
     // it('signature should be valid', async () => {
