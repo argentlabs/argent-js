@@ -1,4 +1,4 @@
-import { Wallet, WalletType } from '../interfaces'
+import { Wallet, WalletType, Web3Provider } from '../interfaces';
 import { ethers, utils } from 'ethers'
 
 const argentABI = [
@@ -18,14 +18,14 @@ const WALLET_DETECTOR_ADDRESS = {
 
 export class Argent implements Wallet {
 
-    provider: ethers.providers.Web3Provider
+    provider: Web3Provider
     contract: ethers.Contract
     type: WalletType
     address: string
     supportEIP1271: boolean
     supportApproveAndCall: boolean
 
-    constructor(address: string, provider: ethers.providers.Web3Provider) {
+    constructor(address: string, provider: Web3Provider) {
         this.type = WalletType.Argent
         this.provider = provider;
         this.supportEIP1271 = true

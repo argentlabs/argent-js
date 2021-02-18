@@ -1,5 +1,7 @@
 import { ethers } from 'ethers'
 
+export type Web3Provider = ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider
+
 export enum WalletType {
     EOA,
     Argent
